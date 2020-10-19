@@ -50,3 +50,10 @@ disp('Start animating')
 % pause;
 ur.plot(qseq, 'trail', 'r')
 
+
+%% Symbolic solution
+syms q1 q2 q3 q4 q5 q6
+
+ursym = ur.sym();
+
+Tsym = ursym.fkine([q1 q2 q3 q4 q5 q6])
