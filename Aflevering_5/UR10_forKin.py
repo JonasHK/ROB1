@@ -62,13 +62,13 @@ def UR10_forKin(qn,c ):
 
   return T_06
 
-#qn = np.matrix([[np.radians(0.0)],
-#                [np.radians(180.0)],
-#                [np.radians(90.0)],
-#                [np.radians(40.0)],
-#                [np.radians(90.0)],
- #               [np.radians(0.0)]])
-#c = [0]
+qn = np.matrix([[np.radians(80.0)],
+                [np.radians(-40.0)],
+                [np.radians(80.0)],
+                [np.radians(40.0)],
+                [np.radians(80.0)],
+                [np.radians(-100.0)]])
+c = [0]
     
-#o = UR10_forKin(qn,c)
-#print(o)
+o = UR10_forKin(qn,c)
+print(o)
