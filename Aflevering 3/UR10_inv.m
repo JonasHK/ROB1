@@ -10,15 +10,18 @@ function q = UR10_inv(o)
 % a2 = 20; % (distance between 2nd and 3rd joints)
 % d4 = 20; % (distance from 3rd joint to gripper center - all inclusive, ie. also 4th joint)
 
-d1 = 0;
-a1 = 18;
-a2 = 62;
-d4 = 1;
+
+d1 = 0.1273;
+a1 = 0;
+a2 = -0.612;
+d4 = -0.5723;
 
 
 % Calculate oc
-oc = o; % - d4*R*[0;0;1] ;
-xc = oc(1); yc = oc(2); zc = oc(3);
+oc = o; 
+xc = oc(1); 
+yc = oc(2); 
+zc = oc(3);
 
 
 % Calculate q1
@@ -26,9 +29,12 @@ q1 = atan2(yc, xc);  % NOTE: Order of y and x.. depend on atan2 func..
 
 
 % Calculate q2 and q3
-r2 = (xc - a1*cos(q1))^2 + (yc - a1*sin(q1))^2; % radius squared - radius can never be negative, q1 accounts for this..
+% radius squared - radius can never be negative, q1 accounts for this..
+	r2 = (xc - a1*cos(q1))^2 + (yc - a1*sin(q1))^2; 
+
 s = (zc - d1); % can be negative ! (below first joint height..)
-D = ( r2 + s^2 - a2^2 - d4^2)/(2*a2*d4);   % Eqn. (3.44)
+
+D = ( r2 + s^2 - a2^2 - d4^2)/(2*a2*d4);   % Eqn. (3.44) slide 5, eq 1.5
 
 q3 = atan2(-sqrt(1-D^2), D); %  Eqn. (3.46)
 q2 = atan2(s, sqrt(r2)) - atan2(d4*sin(q3), a2 + d4*cos(q3)); % Eqn. (3.47)
