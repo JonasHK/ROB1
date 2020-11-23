@@ -33,7 +33,7 @@ desired_pos2 = np.matrix(
 qn2 = UR10_invKin(desired_pos2)
 
 desired_pos3 = np.matrix(
- [[-9.09244997e-04,  9.89964338e-01,  1.41314484e-01,  3.67272116e-02],
+ [[-9.09244997e-04,  9.89964338e-01,  1.41314484e-01,  23.67272116e-02],
  [ 9.79651168e-01,  2.92444446e-02, -1.98565734e-01, -8.28008224e-01],
  [-2.00705659e-01,  1.38258355e-01, -9.69846310e-01,  24.33077441e-02],
  [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,  1.00000000e+00]])
@@ -133,8 +133,8 @@ def main():
         print("Waiting for server...")
         client.wait_for_server()
         print("Connected to server")
-        #move1()
-        move_repeated()
+        move1()
+        #move_repeated()
         #move_disordered()
         #move_interrupt()
     except KeyboardInterrupt:
