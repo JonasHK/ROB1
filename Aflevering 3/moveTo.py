@@ -23,7 +23,7 @@ def move2(des_pose,time):
     g.trajectory = JointTrajectory()
     g.trajectory.joint_names = JOINT_NAMES
     g.trajectory.points = [
-        JointTrajectoryPoint(positions=Q1, velocities=[0]*6)]
+        JointTrajectoryPoint(positions=Q1, velocities=[0]*6, time_from_start=rospy.Duration(time))]
     client.send_goal(g)
     try:
         client.wait_for_result()
