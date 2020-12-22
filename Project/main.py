@@ -61,6 +61,8 @@ while 1:
     img_coor = image_processing_client(1)
     block_color = img_coor.color
     
+    # Open gripper
+    
     while block_color not 0:
         block_dist = np.linalg.norm(img_coor.x_center_offset,img_coor.y_center_offset)
         # Move above a block to be picked up
@@ -84,8 +86,6 @@ while 1:
         angle_rotation = img_coor.angle_offset
         next_pose = rotate_to_align(newPos,angle_rotation)
         moveToPose(next_pose,5.0)
-    
-        # Open gripper
     
         # Move down
         newPos = translate(newPos, 0.0, 0.0, -0.65)
