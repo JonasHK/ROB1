@@ -68,16 +68,17 @@ from UR10_forKin import FrameTrans
 
 # Parameters
 global d1, a2, a3, a7, d4, d5, d6
+tool_length = 0.15 # [m]
 d1 =  0.1273
 a2 = -0.612
 a3 = -0.5723
 a7 =  0.075
 d4 =  0.163941
 d5 =  0.1157
-d6 =  0.0922
+d6 =  0.0922 + tool_length
 
-d = mat([0.1273, 0, 0, 0.163941, 0.1157, 0.0922])
-a =mat([0 ,-0.612 ,-0.5723 ,0 ,0 ,0])
+d = mat([d1, 0, 0, d4, d5, d6])
+a = mat([0 , a2, a3, 0, 0, 0])
 
 alph = mat([pi/2, 0, 0, pi/2, -pi/2, 0 ])
 
@@ -155,20 +156,20 @@ def UR10_invKin(desired_pos):# T60
   return th
 
 
-
-qn = np.matrix([[-1.574517552052633],
-                [-2.702589813862936],
-                [-1.477959934865133],
-                [-0.45558482805360967],
-                [2.1746609210968018],
-                [-2.12541371980776]])  
-qndeg = np.rad2deg(qn)
-
-print(qndeg)
-
-c = [0]
+if __name__ == "__main__":
+    qn = np.matrix([[-1.574517552052633],
+                    [-2.702589813862936],
+                    [-1.477959934865133],
+                    [-0.45558482805360967],
+                    [2.1746609210968018],
+                    [-2.12541371980776]])  
+    qndeg = np.rad2deg(qn)
     
-o = UR10_forKin(qn,c)
-print(o)
-#qn =UR10_invKin(o)
-#print(qn)
+    print(qndeg)
+    
+    c = [0]
+        
+    o = UR10_forKin(qn,c)
+    print(o)
+    #qn =UR10_invKin(o)
+    #print(qn)
