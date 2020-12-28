@@ -26,45 +26,48 @@ cap = cv2.VideoCapture(0)
     # t=time.time()
     # # Read next frame
     # ret, frame = cap.read()
-    
+
     # if not ret:
-        # break        
-    
+        # break
+
     # # Show the frame
     # cv2.imshow('frame', frame)
-    
+
     # print(frame.shape)
     # print(1 / (time.time()-t),'Hz')
-    
+
     # if cv2.waitKey(1) & 0xFF == ord('q'):
         # break
-    
+
 #VidOut.release()
 
 def camera_pub():
-    pub = rospy.Publisher('camera_stream', String, queue_size=10)
+    pub = rospy.Publisher('camera_stream', Image, queue_size=10)
     rospy.init_node('camera_pub', anonymous=True)
     rate = rospy.Rate(5) # 5 Hz
-	
-	img_msg = Image()
-	img_msg.height = 480
-	img_msg.width = 640
-	img_msg.encoding = 'bgr8'
-	
-	
+
+    img_msg = Image()
+    img_msg.header.stamp = time.time
+    img_msg.height = 480
+    img_msg.width = 640
+    img_msg.encoding = 'bgr8'
+    img_msg.is_bigendian = False
+    img_msg.step = 1920
+
+
     while not rospy.is_shutdown():
-		# Read next frame
-		ret, frame = cap.read()
-		
-		if not ret:
-			break
-		
-		# Publish frame
-		img_msg.data = frame
-		pub.publish(frame)
-		
-		# Wait
-		rate.sleep()
+        # Read next frame
+        ret, frame = cap.read()
+
+        if not ret:
+        	break
+
+        # Publish frame
+        img_msg.data = frame
+        pub.publish(img_msg)
+
+        # Wait
+        rate.sleep()
 
 
 
