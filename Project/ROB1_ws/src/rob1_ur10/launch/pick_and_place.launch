@@ -1,0 +1,8 @@
+<launch>
+
+  <group ns="">
+    <node pkg="rob1_ur10" name="cameraControl" type="camera_control_node.py"/>
+    <node pkg="rob1_ur10" name="imageProcessing" type="imageProcessing.py"/>
+  </group>
+
+</launch>

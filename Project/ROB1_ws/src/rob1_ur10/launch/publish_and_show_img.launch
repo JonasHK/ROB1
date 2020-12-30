@@ -1,0 +1,8 @@
+<launch>
+
+  <group ns="pick_place">
+    <node pkg="rob1_ur10" name="pub" type="camera_control_node.py"/>
+	<node pkg="rob1_ur10" name="sub" type="video_subscriber_class.py"/>
+  </group>
+
+</launch>
