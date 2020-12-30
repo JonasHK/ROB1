@@ -1,15 +1,16 @@
 #!/usr/bin/env python
-# ROS Node
-from _future_ import print_function
-from rob1_ur10.srv import ImageProcessing, ImageProcessingResponse
-import rospy
+"""
+Used to test functionality of camera_control_node.
+"""
 import cv2
+import rospy
 import time
 from sensor_msgs.msg import Image
 import numpy as np
 from cv_bridge import CvBridge, CvBridgeError
 
 cvb = CvBridge()
+
 
 def msg_to_numpy(data):
     """Extracts image data from Image message.
@@ -21,6 +22,7 @@ def msg_to_numpy(data):
     """
     return cvb.imgmsg_to_cv2(data, "bgr8")
 
+
 def numpy_to_msg(img):
     """Builds a Image message from a NumPy array.
     Args:
@@ -30,8 +32,6 @@ def numpy_to_msg(img):
     """
     return cvb.cv2_to_imgmsg(img, "bgr8")
 
-
-
 class ImageSubscriber:
     def __init__(self):
         self.name = 'kurt'
@@ -40,39 +40,25 @@ class ImageSubscriber:
         print('Image received')
         np_image = msg_to_numpy(data)
         self.np_image = np_image
-        # # Display received image to show connection
-        # cv2.imshow(winname = 'received_image', mat=self.get_np_image())
-        # cv2.waitKey(30)
+        # Display received image to show connection
+        cv2.imshow(winname = 'received_image', mat=self.get_np_image())
+        cv2.waitKey(30)
 
     def get_np_image(self):
         return self.np_image
 
 
 
-def handle_image_processing(req):
-    x_center_offset = 1
-    y_center_offset = 2
-    angle_offset = 3
-    color = 4
-    image_test = subscriber_obj.get_np_image()
-    return ImageProcessingResponse(x_center_offset, y_center_offset, angle_offset, color)
 
-
-
-def image_processing_server():
-    rospy.init_node('image_processing_server')
-
-    # Initialize camera subscriber
-    global subscriber_obj
+def camera_sub():
+    # Initialize camera subscriber node
     subscriber_obj = ImageSubscriber()
+
+    rospy.init_node('camera_sub', anonymous=True)
     rospy.Subscriber("camera_stream", Image, subscriber_obj.image_callback)
 
-    # Initialize Service
-    s = rospy.Service('image_processing', ImageProcessing, handle_image_processing)
-
-
+    # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 
-
-if _name_ == "_main_":
-    image_processing_server()
+if __name__ == '__main__':
+    camera_sub()

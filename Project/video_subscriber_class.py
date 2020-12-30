@@ -33,26 +33,28 @@ def numpy_to_msg(img):
     return cvb.cv2_to_imgmsg(img, "bgr8")
 
 class ImageSubscriber:
-	def __init__(self):
-		
-	
-	def image_callback(data):
-		print('Image received')
-		np_image = msg_to_numpy(data)
+    def __init__(self):
+        self.name = 'kurt'
 
-		# Display received image to show connection
-		cv2.imshow(winname = 'received_image', mat=np_image)
-		cv2.waitKey(30)
-		self.image = np_image
-	
+    def image_callback(self,data):
+        print('Image received')
+        np_image = msg_to_numpy(data)
+        self.np_image = np_image
+        # # Display received image to show connection
+        # cv2.imshow(winname = 'received_image', mat=self.get_np_image())
+        # cv2.waitKey(30)
+
+    def get_np_image(self):
+        return self.np_image
+
 
 
 
 def camera_sub():
     # Initialize camera subscriber node
     subscriber_obj = ImageSubscriber()
-	
-	rospy.init_node('camera_sub', anonymous=True)
+
+    rospy.init_node('camera_sub', anonymous=True)
     rospy.Subscriber("camera_stream", Image, subscriber_obj.image_callback)
 
     # spin() simply keeps python from exiting until this node is stopped
