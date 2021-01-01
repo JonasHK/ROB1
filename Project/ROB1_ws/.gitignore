@@ -1,0 +1,11 @@
+# Python #
+##########
+*.pyc
+
+
+# Folders to ignore #
+#####################
+build/
+devel/
+src/universal_robot/
+src/ur_modern_driver/
