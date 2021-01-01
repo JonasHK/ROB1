@@ -18,7 +18,14 @@ JOINT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
 def moveToPose(des_pose,time):
     # Convert pose to joint angles
     qn1 = UR10_invKin(des_pose)
-    Q1 = qn1[:,0] # Select first configuration
+    # Find the first elbow-up configuration
+    config = 0
+    for index in range(0,8):
+        if qn1[3,index] > 0:
+            config = index
+            break
+        
+    Q1 = qn1[:,config]
 
     # Create goal message
     g = FollowJointTrajectoryGoal()
