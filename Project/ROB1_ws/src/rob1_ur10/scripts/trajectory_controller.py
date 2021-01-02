@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from __future__ import print_function
-# from moveTo import initMove, moveToPose
 import numpy as np
 import rospy
 import time
@@ -8,12 +7,16 @@ import roslib; roslib.load_manifest('ur_driver')
 import actionlib
 from control_msgs.msg import *
 from trajectory_msgs.msg import *
+from rob1_ur10.srv import ImageProcessing, ImageProcessingResponse
+# Import python scrips
 from rob1_ur10.moveTo import initMove, moveToPose
 from rob1_ur10.translate import translate
+from rob1_ur10.arm_controller import init_arm_controller, move_to_pose
+
 
 
 # Defines
-move_ratio = 0.75       # Ratio of distance to block the robot moves per iteration
+move_ratio = 0.95       # Ratio of distance to block the robot moves per iteration
 goal_tolerance = 0.02   # [m] Acceptable horizontal distance to block
 delay = 30              # [s] Delay between new image, when the fov is empty
 
@@ -39,7 +42,7 @@ red_bin_coor = np.matrix(
 def image_processing_client(x):
     rospy.wait_for_service('image_processing')
     try:
-        imageProcessProxy = rospy.ServiceProxy('image_processing', srvType)
+        imageProcessProxy = rospy.ServiceProxy('image_processing', ImageProcessing)
         resp1 = imageProcessProxy(x)
         return resp1
     except rospy.ServiceException as e:
@@ -57,7 +60,39 @@ def rotate_to_align(robot_pose,ang):
 
 # def block_in_robot_coor()
 
+if __name__ == '__main__':
+    # Initiate the MoveUR node
+    init_arm_controller()
 
+    # Move to starting position
+    move_to_pose(initPos, 15)
+
+
+
+    # Call image processing service to get movement coordinates
+    img_data = image_processing_client(1)
+    block_color = img_data.color
+
+    # Move towards block
+    while block_color <> 0:
+        block_dist = np.linalg.norm(img_data.x_center_offset, img_data.y_center_offset)
+        # Move above a block to be picked up
+        while block_dist > goal_tolerance:
+
+            x_move = img_data.x_center_offset * move_ratio
+            y_move = img_data.y_center_offset * move_ratio
+
+            # Move towards target
+            newPos = translate(initPos, x_move, y_move, 0.0)
+            print('Move above target')
+            moveToPose(newPos, 2.5)
+            # Request for new coordinates to block
+            block_dist = 0.01
+            # img_data = image_processing_client(1)
+            # block_dist = np.linalg.norm(img_data.x_center_offset, img_data.y_center_offset)
+
+
+"""
 # Initiate the MoveUR node
 initMove()
 
@@ -66,32 +101,32 @@ moveToPose(initPos,20.0)
 
 while 1:
     # Call image processing service to get movement coordinates
-    img_coor = image_processing_client(1)
-    block_color = img_coor.color
+    img_data = image_processing_client(1)
+    block_color = img_data.color
 
     # Open gripper
 
     while block_color <> 0:
-        block_dist = np.linalg.norm(img_coor.x_center_offset,img_coor.y_center_offset)
+        block_dist = np.linalg.norm(img_data.x_center_offset, img_data.y_center_offset)
         # Move above a block to be picked up
         while block_dist > goal_tolerance:
 
-            x_move = img_coor.x_center_offset * move_ratio
-            y_move = img_coor.y_center_offset * move_ratio
+            x_move = img_data.x_center_offset * move_ratio
+            y_move = img_data.y_center_offset * move_ratio
 
             # Move towards target
             newPos = translate(initPos, x_move, y_move, 0.0)
             print('Move above target')
             moveToPose(newPos, 2.5)
             # Request for new coordinates to block
-            img_coor = image_processing_client(1)
+            img_data = image_processing_client(1)
 
         # Perform coordinate frame transformation on the block's pose from camera to
         # robot
         # block_in_robot_coor()
 
         # Move and rotate the robot's tool to be above and aligned with the block_dist
-        angle_rotation = img_coor.angle_offset
+        angle_rotation = img_data.angle_offset
         next_pose = rotate_to_align(newPos,angle_rotation)
         moveToPose(next_pose,5.0)
 
@@ -133,7 +168,8 @@ while 1:
         print('Move back to start position again')
         print(initPos)
 
-        img_coor = image_processing_client(1)
-        block_color = img_coor.color
+        img_data = image_processing_client(1)
+        block_color = img_data.color
 
     time.sleep(delay)
+"""
