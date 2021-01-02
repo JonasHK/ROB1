@@ -2,7 +2,9 @@
 
 int16 a
 ---
-int16 x_center_offset
-int16 y_center_offset
+float32 x_center_offset
+float32 y_center_offset
 float32 angle_offset
 int8 color
+#uint8[] image_object
+sensor_msgs/Image image_object

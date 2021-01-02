@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 """
 Used to test functionality of camera_control_node.
+The program creates a node, which subscribes to the
+/camera_stream topic and display the image in a
+window
 """
 import cv2
 import rospy
@@ -34,7 +37,7 @@ def numpy_to_msg(img):
 
 class ImageSubscriber:
     def __init__(self):
-        self.name = 'kurt'
+        self.name = 'ImageSubscriberClass'
 
     def image_callback(self,data):
         print('Image received')

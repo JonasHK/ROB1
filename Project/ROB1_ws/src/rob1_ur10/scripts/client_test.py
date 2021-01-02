@@ -1,8 +1,23 @@
 #!/usr/bin/env python
 import rospy
 import numpy as np
+import matplotlib.pyplot as plt
 import time
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
 from rob1_ur10.srv import ImageProcessing, ImageProcessingResponse
+
+cvb = CvBridge()
+def msg_to_numpy(data):
+    """Extracts image data from Image message.
+    Args:
+        data (sensor_msgs/Image): The ROS Image message, exactly as passed
+            by the subscriber to its callback.
+    Returns:
+        The image, as a NumPy array.
+    """
+    return cvb.imgmsg_to_cv2(data, "bgr8")
+
 
 def image_processing_client(x):
     rospy.wait_for_service('image_processing')
@@ -13,18 +28,35 @@ def image_processing_client(x):
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
 
-# def add_two_ints_client(x, y):
-#     rospy.wait_for_service('add_two_ints')
-#     try:
-#         add_two_ints = rospy.ServiceProxy('add_two_ints', AddTwoInts)
-#         resp1 = add_two_ints(x, y)
-#         return resp1.sum
-#     except rospy.ServiceException as e:
-#         print("Service call failed: %s"%e)
+def show_image_data(client_answer, verbose):
+    if verbose == 1:
+        print('x center offset =' + str(client_answer.x_center_offset))
+        print('y center offset = ' + str(client_answer.y_center_offset))
+        print('Angle offset = ' + str(client_answer.angle_offset))
+        print('Box color = ' + str(client_answer.color))
+    returned_img = msg_to_numpy(client_answer.image_object)
+    plt.imshow(cv2.cvtColor(returned_img, cv2.COLOR_BGR2RGB))
+    plt.show()
+
 
 if __name__ == '__main__':
-    client_answer = image_processing_client(1)
-    print('x center offset')
-    print(client_answer.x_center_offset)
-    print('y center offset')
-    print(client_answer.y_center_offset)
+    # Make service requests
+    client_answer1 = image_processing_client(1)
+    time.sleep(5)
+    client_answer2 = image_processing_client(1)
+    time.sleep(5)
+    client_answer3 = image_processing_client(1)
+    time.sleep(5)
+    client_answer4 = image_processing_client(1)
+    time.sleep(5)
+    client_answer5 = image_processing_client(1)
+    time.sleep(5)
+    client_answer6 = image_processing_client(1)
+
+    #Display result
+    show_image_data(client_answer1, 1)
+    show_image_data(client_answer2, 1)
+    show_image_data(client_answer3, 1)
+    show_image_data(client_answer4, 1)
+    show_image_data(client_answer5, 1)
+    show_image_data(client_answer6, 1)

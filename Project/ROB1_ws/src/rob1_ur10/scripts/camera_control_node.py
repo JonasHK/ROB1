@@ -47,7 +47,7 @@ cap = cv2.VideoCapture(0)
 def camera_pub():
     print('Starting camera publisher nodes')
     # Define image publisher node
-    rospy.init_node('camera_pub', anonymous=True)
+    rospy.init_node('image_cquisition', anonymous=True)
     pub = rospy.Publisher('camera_stream', Image, queue_size=10)
 
     # Set the publishing rate

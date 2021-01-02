@@ -12,6 +12,7 @@ from UR10_invKin import UR10_invKin
 from UR10_forKin import FrameTrans
 from UR10_forKin import UR10_forKin
 from math import pi
+
 JOINT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
                'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
 
@@ -24,7 +25,7 @@ def moveToPose(des_pose,time):
         if qn1[3,index] > 0 and qn1[2,index] > -pi/2 and qn1[2,index] < pi/2:
             config = index
             break
-        
+
     Q1 = qn1[:,config]
 
     # Create goal message

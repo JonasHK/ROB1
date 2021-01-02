@@ -9,6 +9,7 @@ from sensor_msgs.msg import Image
 import numpy as np
 from cv_bridge import CvBridge, CvBridgeError
 import matplotlib.pyplot as plt
+from rob1_ur10.vision import vision_main
 
 cvb = CvBridge()
 
@@ -35,15 +36,12 @@ def numpy_to_msg(img):
 
 class ImageSubscriber:
     def __init__(self):
-        self.name = 'kurt'
+        self.name = 'image subscriber'
 
     def image_callback(self,data):
         print('Image received')
         np_image = msg_to_numpy(data)
         self.np_image = np_image
-        # # Display received image to show connection
-        # cv2.imshow(winname = 'received_image', mat=self.get_np_image())
-        # cv2.waitKey(30)
 
     def get_np_image(self):
         return self.np_image
@@ -51,22 +49,17 @@ class ImageSubscriber:
 
 
 def handle_image_processing(req):
-    x_center_offset = 1
-    y_center_offset = 2
-    angle_offset = 3
-    color = 4
-    image_test = subscriber_obj.get_np_image()
-    print(image_test)
-    # cv2.imshow(winname = 'received_image', mat=image_test)
-    # cv2.waitKey(30)
-    plt.imshow(cv2.cvtColor(image_test, cv2.COLOR_BGR2RGB))
-    plt.show()
-    return ImageProcessingResponse(x_center_offset, y_center_offset, angle_offset, color)
+    camera_image = subscriber_obj.get_np_image()
+
+    # Perform image processing algoritms
+    x_center_offset, y_center_offset, angle_offset, color, image_object = vision_main(camera_image)
+
+    return ImageProcessingResponse(x_center_offset, y_center_offset, angle_offset, color, image_object)
 
 
 
 def image_processing_server():
-    rospy.init_node('image_processing_server')
+    rospy.init_node('image_processing')
 
     # Initialize camera subscriber
     global subscriber_obj
@@ -76,7 +69,7 @@ def image_processing_server():
     # Initialize Service
     s = rospy.Service('image_processing', ImageProcessing, handle_image_processing)
 
-
+    # Keeps python running
     rospy.spin()
 
 
