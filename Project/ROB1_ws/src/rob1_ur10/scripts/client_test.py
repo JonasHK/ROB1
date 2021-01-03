@@ -7,6 +7,9 @@ import cv2
 from cv_bridge import CvBridge, CvBridgeError
 from rob1_ur10.srv import ImageProcessing, ImageProcessingResponse
 
+# Defines
+request_delay = 2
+
 cvb = CvBridge()
 def msg_to_numpy(data):
     """Extracts image data from Image message.
@@ -33,7 +36,7 @@ def show_image_data(client_answer, verbose):
         print('x center offset =' + str(client_answer.x_center_offset))
         print('y center offset = ' + str(client_answer.y_center_offset))
         print('Angle offset = ' + str(client_answer.angle_offset))
-        print('Box color = ' + str(client_answer.color))
+        print('Box color = ' + str(client_answer.color) + '\n')
     returned_img = msg_to_numpy(client_answer.image_object)
     plt.imshow(cv2.cvtColor(returned_img, cv2.COLOR_BGR2RGB))
     plt.show()
@@ -42,15 +45,15 @@ def show_image_data(client_answer, verbose):
 if __name__ == '__main__':
     # Make service requests
     client_answer1 = image_processing_client(1)
-    time.sleep(5)
+    time.sleep(request_delay)
     client_answer2 = image_processing_client(1)
-    time.sleep(5)
+    time.sleep(request_delay)
     client_answer3 = image_processing_client(1)
-    time.sleep(5)
+    time.sleep(request_delay)
     client_answer4 = image_processing_client(1)
-    time.sleep(5)
+    time.sleep(request_delay)
     client_answer5 = image_processing_client(1)
-    time.sleep(5)
+    time.sleep(request_delay)
     client_answer6 = image_processing_client(1)
 
     #Display result

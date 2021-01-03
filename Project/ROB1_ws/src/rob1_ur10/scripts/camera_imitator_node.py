@@ -40,7 +40,7 @@ def camera_imitator_pub():
     pub = rospy.Publisher('camera_stream', Image, queue_size=10)
 
     # Set the publishing rate
-    rate = rospy.Rate(0.2) 
+    rate = rospy.Rate(0.5)
     img_nr = 8
 
 
